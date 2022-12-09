@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { OpenAIAuth } from './OpenAIAuth';
-import { context, CookieJar, fetch } from 'fetch-h2';
-// import { Cookie, CookieJar } from 'tough-cookie';
+import { context, CookieJar } from 'fetch-h2';
 
 export class ChatGPT {
   config: any;
@@ -11,9 +10,10 @@ export class ChatGPT {
   headers: Record<string, string>;
   conversationIdPrev: string;
   parentIdPrev: string;
+  chatHistory: any[];
 
-  constructor(config: any, conversationId?: string) {
-    this.config = config;
+  constructor(config?: any, conversationId?: string) {
+    this.config = config ?? {};
     this.conversationId = conversationId;
     this.parentId = uuidv4();
     this.baseUrl = 'https://chat.openai.com/';
@@ -31,17 +31,7 @@ export class ChatGPT {
     this.parentId = uuidv4();
   }
 
-  async getChatStream(data: any) {
-    const response = await fetch(`${this.baseUrl}backend-api/conversation`, {
-      method: 'POST',
-      headers: this.headers,
-      json: data,
-    });
-    const text = await response.text();
-    console.log(text);
-  }
-
-  async getChatText(data: any) {
+  private async getChatText(data: any) {
     const cookieJar = new CookieJar();
     await cookieJar.setCookie(
       '__Secure-next-auth.session-token=' + this.config.sessionToken,
@@ -64,21 +54,20 @@ export class ChatGPT {
         json: data,
       }
     );
-    // console.log(response.headers.get('location'));
+
     const text = (await response.text()).split('\n').filter((x) => x !== '');
     const finalResponse = JSON.parse(text[text.length - 2].substring(6));
-    // console.log(finalResponse);
     ctx.disconnect(`${this.baseUrl}backend-api/conversation`);
     this.parentId = finalResponse['message']['id'];
     this.conversationId = finalResponse['conversation_id'];
-    // console.log(finalResponse['message']['content']['parts'][0]);
+
     return finalResponse;
   }
 
   async getChat(prompt: string) {
     this.conversationIdPrev = this.conversationId;
     this.parentIdPrev = this.parentId;
-    return await this.getChatText({
+    const response = await this.getChatText({
       action: 'next',
       messages: [
         {
@@ -91,6 +80,8 @@ export class ChatGPT {
       parent_message_id: this.parentId,
       model: 'text-davinci-002-render',
     });
+    this.chatHistory.push(response);
+    return response;
   }
 
   async getNextResponse(prompt: string) {
@@ -98,19 +89,20 @@ export class ChatGPT {
     return conversation['message']['content']['parts'][0];
   }
 
-  refreshHeaders() {
+  rollback() {
+    this.conversationId = this.conversationIdPrev;
+    this.parentId = this.parentIdPrev;
+  }
+
+  private refreshHeaders() {
     this.headers = {
-      // Host: 'chat.openai.com',
       Accept: 'text/event-stream',
-      // Accept: 'application/json',
       Authorization: `Bearer ${this.config.Authorization}`,
       'Content-Type': 'application/json',
       'User-Agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
       'X-Openai-Assistant-App-Id': '',
-      // Connection: 'close',
       'Accept-Language': 'en-US,en;q=0.9',
-      // Referer: 'https://chat.openai.com/chat',
     };
   }
 
@@ -153,10 +145,9 @@ export class ChatGPT {
     await auth.init();
     try {
       await auth.login();
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+
     if (auth.accessToken) {
       this.config.Authorization = auth.accessToken;
       if (auth.sessionToken) {

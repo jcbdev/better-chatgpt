@@ -1,1 +1,2 @@
-export * from './lib/chatgpt-api';
+export * from './lib/ChatGPT';
+export * from './lib/OpenAIAuth';
