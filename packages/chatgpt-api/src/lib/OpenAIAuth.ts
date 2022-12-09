@@ -71,7 +71,11 @@ export class OpenAIAuth {
     }
   }
 
-  async get(url: string, headers: Record<string, string> = {}) {
+  async get(
+    url: string,
+    headers: Record<string, string> = {},
+    redirect = false
+  ) {
     console.log('GET', url, {
       ...defaultConfig.headers,
       ...headers,
@@ -85,6 +89,7 @@ export class OpenAIAuth {
         ...headers,
         cookie: await this.cookieJar.getCookieString(url),
       },
+      disableRedirect: !redirect,
     });
 
     console.log(response);
@@ -251,10 +256,13 @@ export class OpenAIAuth {
     if (response.status !== 302)
       throw new Error('Wrong response from password page');
 
-    let newState: string = [
-      ...response.body.matchAll(/state=(.*)/g),
-    ][0] as string;
-    newState = newState.split('"')[0];
+    // let newState: string = [
+    //   ...response.body.matchAll(/state=(.*)/g),
+    // ][0] as string;
+    // newState = newState.split('"')[0];
+    const newState = response.headers['Location']
+      .split('state=')[1]
+      .split('&')[0];
 
     response = await this.get(
       `https://auth0.openai.com/authorize/resume?state=${newState}`,
@@ -266,13 +274,45 @@ export class OpenAIAuth {
       }
     );
 
+    if (response.status !== 302)
+      throw new Error('Auth0 failed to issue access token');
+
+    response = await this.get(response.headers.Location, {
+      Host: 'auth0.openai.com',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      Referer: `https://auth0.openai.com/u/login/password?state=${state}`,
+    });
+
+    if (response.status !== 302)
+      throw new Error('Auth0 failed to issue access token');
+
+    response = await this.get(response.headers.Location, {
+      Host: 'auth0.openai.com',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      Referer: `https://auth0.openai.com/u/login/password?state=${state}`,
+    });
+
+    if (response.status !== 307)
+      throw new Error('Auth0 failed to issue access token');
+
+    response = await this.get(
+      `https://chat.openai.com${response.headers.Location}`,
+      {
+        Host: 'auth0.openai.com',
+        Accept:
+          'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        Referer: `https://auth0.openai.com/u/login/password?state=${state}`,
+      }
+    );
+
     if (response.status !== 200)
       throw new Error('Auth0 failed to issue access token');
 
-    let accessToken: string = [
+    console.log([...response.body.matchAll(/accessToken":"([^"]*)"/g)]);
+    const accessToken: string = [
       ...response.body.matchAll(/accessToken":"(.*)"/g),
-    ][0] as string;
-    accessToken = accessToken.split('"')[0];
+    ][0][1] as string;
+    // accessToken = accessToken.split('"')[0];
     this.accessToken = accessToken;
 
     response = await this.get('https://chat.openai.com/api/auth/session', {

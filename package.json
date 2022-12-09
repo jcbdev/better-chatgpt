@@ -6,8 +6,11 @@
   "private": true,
   "dependencies": {
     "cycletls": "^1.0.21",
+    "dotenv": "^16.0.3",
+    "fetch-h2": "^3.0.2",
     "tough-cookie": "^4.1.2",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@nrwl/eslint-plugin-nx": "15.3.0",

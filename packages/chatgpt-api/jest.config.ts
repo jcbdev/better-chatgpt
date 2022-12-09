@@ -13,4 +13,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/packages/chatgpt-api',
+  setupFiles: ['dotenv/config'],
 };
