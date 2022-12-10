@@ -1,21 +1,21 @@
 {
-  "name": "chatgpt-api",
+  "name": "better-chatgpt",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/chatgpt-api/src",
+  "sourceRoot": "packages/better-chatgpt/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/chatgpt-api/**/*.ts"]
+        "lintFilePatterns": ["packages/better-chatgpt/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "packages/chatgpt-api/jest.config.ts",
+        "jestConfig": "packages/better-chatgpt/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -23,11 +23,11 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/chatgpt-api",
-        "tsConfig": "packages/chatgpt-api/tsconfig.lib.json",
-        "packageJson": "packages/chatgpt-api/package.json",
-        "main": "packages/chatgpt-api/src/index.ts",
-        "assets": ["packages/chatgpt-api/*.md"]
+        "outputPath": "dist/packages/better-chatgpt",
+        "tsConfig": "packages/better-chatgpt/tsconfig.lib.json",
+        "packageJson": "packages/better-chatgpt/package.json",
+        "main": "packages/better-chatgpt/src/index.ts",
+        "assets": ["packages/better-chatgpt/*.md"]
       }
     }
   },

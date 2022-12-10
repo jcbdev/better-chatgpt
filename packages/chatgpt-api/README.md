@@ -1,4 +1,4 @@
-# chatgpt-api
+# better-chatgpt
 
 Unoffical ChatGPT Api
 
@@ -7,7 +7,7 @@ Based on reverse engineering work done by the python community and quickly porte
 # Install
 
 ```
-npm install @jcbdev/chatgpt-api
+npm install better-chatgpt
 ```
 
 # Functionality
@@ -25,7 +25,7 @@ npm install @jcbdev/chatgpt-api
 _Login via email and password_
 
 ```
-import { ChatGPT } from '@jcbdev/chatgpt-api';
+import { ChatGPT } from 'better-chatgpt';
 
 const chat = new ChatGPT();
 await chat.login('some@email.com', 'mypassword');
@@ -39,7 +39,7 @@ response = await chat.getNextResponse('');
 _Use existing session/auth token_
 
 ```
-import { ChatGPT } from '@jcbdev/chatgpt-api';
+import { ChatGPT } from 'better-chatgpt';
 
 const chat = new ChatGPT({
   Authorization: '<token>',

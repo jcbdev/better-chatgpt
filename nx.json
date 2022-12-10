@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "chatgpt-api",
+  "npmScope": "better-chatgpt",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",

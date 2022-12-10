@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@jcbdev/chatgpt-api": ["packages/chatgpt-api/src/index.ts"]
+      "better-chatgpt": ["packages/better-chatgpt/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

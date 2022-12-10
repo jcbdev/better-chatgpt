@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'chatgpt-api',
+  displayName: 'better-chatgpt',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,6 +12,6 @@ export default {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/chatgpt-api',
+  coverageDirectory: '../../coverage/packages/better-chatgpt',
   setupFiles: ['dotenv/config'],
 };

@@ -1,16 +1,22 @@
-# chatgpt-api
+# better-chatgpt
 
-Unoffical ChatGPT Api
+_*Unoffical ChatGPT Api*_
 
 Based on reverse engineering work done by the python community and quickly ported to nodejs for a project 😉
+
+---
+
+_*CAN USE EMAIL/PASSWORD TO GET SESSION TOKEN AUTOMAGICALLY*_ 🚀
+
+---
 
 # Install
 
 ```
-npm install @jcbdev/chatgpt-api
+npm install better-chatgpt
 ```
 
-# Functionality
+# Features
 
 - No moderation
 - Programmable.
@@ -19,13 +25,17 @@ npm install @jcbdev/chatgpt-api
 - Email/password authentication
 - Cookie based authentication
 - Access Token authentication
+- Progressive responses
+- Multiple sessions
+- Conversation history
+- Token refresh
 
 # Usage
 
 _Login via email and password_
 
 ```
-import { ChatGPT } from '@jcbdev/chatgpt-api';
+import { ChatGPT } from 'better-chatgpt';
 
 const chat = new ChatGPT();
 await chat.login('some@email.com', 'mypassword');
@@ -39,7 +49,7 @@ response = await chat.getNextResponse('');
 _Use existing session/auth token_
 
 ```
-import { ChatGPT } from '@jcbdev/chatgpt-api';
+import { ChatGPT } from 'better-chatgpt';
 
 const chat = new ChatGPT({
   Authorization: '<token>',
