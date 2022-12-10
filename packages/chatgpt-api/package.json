@@ -1,4 +1,20 @@
 {
   "name": "better-chatgpt",
-  "version": "1.0.0"
+  "version": "1.0.1",
+  "description": "A better chatgpt unnofficial api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcbdev/better-chatgpt.git"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "keywords": [
+    "chatgpt",
+    "gpt",
+    "gpt api",
+    "chatgpt api"
+  ],
+  "author": "James Barker <james@jcbdevelopment.co.uk>",
+  "license": "MIT"
 }
